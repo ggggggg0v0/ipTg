@@ -8,6 +8,9 @@ send IP to telegram bot
 ```
 token: xxx
 chat_id: xxx
+noip_user: 
+noip_pwd: 
+noip_hostname: 
 ```
 
 3. set crontab `crontab -e``
