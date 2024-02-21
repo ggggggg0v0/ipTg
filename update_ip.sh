@@ -29,12 +29,25 @@ fi
 # load current ip
 IP=$(curl -s https://ipinfo.io/ip)
 
+is_valid_ip() {
+    local ip="$1"
+    local regex="^([0-9]{1,3}\.){3}[0-9]{1,3}$"
+
+    if [[ $ip =~ $regex ]]; then
+        # IP address is valid
+        echo "Valid IP address: $ip"
+    else
+        # IP address is not valid
+        echo "Invalid IP address: $ip"
+    fi
+}
+
 # check current ip and last ip
-if [ "$IP" != "$LAST_IP" ]; then
+if [ "$IP" != "$LAST_IP" ] && is_valid_ip "$IP"; then
   result=$(curl -s "http://$NOIP_USER:$NOIP_PWD@dynupdate.no-ip.com/nic/update?hostname=$NOIP_HOSTNAME&myip=$IP")
 
   # set the tg message
-  MESSAGE="My public IP address has changed to $IP. $result"
+  MESSAGE="My public IP address was change from $LAST_IP to $IP. $result"
 
   # send to Telegram Bot API
   curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage -d chat_id=$CHAT_ID -d text="$MESSAGE"
